@@ -18,6 +18,7 @@ resource "azurerm_network_security_group" "mySecGroup" {
         source_address_prefix      = "*"
         destination_address_prefix = "*"
     }
+    
     # Acceso a servicio web (default 80)
     security_rule {
         name                       = "HTTP"

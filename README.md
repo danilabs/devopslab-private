@@ -85,6 +85,8 @@ az vm image terms show --urn cognosys:centos-8-stream-free:centos-8-stream-free:
 }
 ```
 
+Crear la clave publica de SSH sin passphrase
+```ssh-keygen
 ## 02 Desplegar
 
 Para poder desplegar terraform correctamente ejecutamos los siguientes comandos.

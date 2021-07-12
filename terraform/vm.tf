@@ -13,7 +13,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
     admin_ssh_key {
         username   = var.ssh_user
-        public_key = file("~/.ssh/id_rsa.pub")
+        public_key = file(var.public_key_path)
     }
 
     os_disk {
@@ -35,7 +35,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
     }
 
     boot_diagnostics {
-        storage_account_uri = azurerm_storage_account.storageAcc.primary_blob_endpoint
+        storage_account_uri = azurerm_storage_account.stAccount.primary_blob_endpoint
     }
 
     tags = {
