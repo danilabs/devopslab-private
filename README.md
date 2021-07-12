@@ -64,13 +64,13 @@ TO-DO
 Para instalar Terraform deberemos de ejecutar los siguientes comandos.
 
 ```sudo dnf install -y dnf-plugins-core
-sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/$release/hashicorp.repo
+sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
 ```
 Mas informacion: https://www.terraform.io/docs/cli/install/yum.html
 
 ## 01 Preparacion
 Descargar las imagenes de centos-8-stream-free para poder utilizarlas posteriormente.
-```az vm image accept-terms --urn cognosys:centos-8-stream-free:centos-8-stream-free:1.2019.0810
+```az vm image terms acept --urn cognosys:centos-8-stream-free:centos-8-stream-free:1.2019.0810
 az vm image terms show --urn cognosys:centos-8-stream-free:centos-8-stream-free:1.2019.0810
 ```
 
@@ -78,9 +78,9 @@ az vm image terms show --urn cognosys:centos-8-stream-free:centos-8-stream-free:
 
 ```provider "azurerm" {
   features {}
-  subscription_id = "<SUBSCRIPCION ID>" # Suscripcion de portal.azure.com
+  subscription_id = "<SUBSCRIPCION ID>" # Suscripcion
   client_id       = "<APP_ID>" # Service principal "name"
-  client_secret   = "<PASSWORD>" # Service principal "secret"
+  client_secret   = "<PASSWORD>" # Service principal "password"
   tenant_id       = "<TENANT>" # Service principal "tenant"
 }
 ```

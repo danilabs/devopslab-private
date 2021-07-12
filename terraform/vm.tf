@@ -7,7 +7,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
     location            = azurerm_resource_group.rg.location
     size                = var.vm_size
     admin_username      = var.ssh_user
-    network_interface_ids = [ azurerm_network_interface.myNic.id ]
+    network_interface_ids = [ azurerm_network_interface.myNic[count.index] ]
     disable_password_authentication = true
     count               = length(var.vm_list)
 
@@ -35,7 +35,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
     }
 
     boot_diagnostics {
-        storage_account_uri = azurerm_storage_account.stAccount.primary_blob_endpoint
+        storage_account_uri = azurerm_storage_account.storageAcc.primary_blob_endpoint
     }
 
     tags = {

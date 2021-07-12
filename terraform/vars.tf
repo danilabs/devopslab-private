@@ -1,10 +1,3 @@
-# Region de azure
-variable "location" {
-  type = string
-  description = "Region de Azure donde crearemos la infraestructura"
-  default = "West Europe"
-}
-
 # Tamaño de la VM
 variable "vm_size" {
   type = string
