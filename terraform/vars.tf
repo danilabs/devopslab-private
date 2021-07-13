@@ -1,13 +1,26 @@
-# Tamaño de la VM
-variable "vm_size" {
+# Tamaño de la VM de master
+variable "vm_size_master" {
   type = string
-  description = "Tamaño de la maquina virtual"
-  default = "Standard_D2_v2" # 2 CPUs y 7.0 GB RAM
+  description = "Tamaño de la maquina virtual master"
+  default = "Standard_B2s" # 2 CPUs y 4.0 GB RAM
 }
 
-# Lista de vm a crear
-variable "vm_list" {
-  description = "Maquinas virtuales"
+variable "vm_size_worker" {
+  type = string
+  description = "Tamaño de la maquina virtual worker"
+  default = "Standard_D1_v2" # 1 CPU y 3.5 GB RAM
+}
+
+# Lista de workers a crear
+variable "vm_workers" {
+  description = "Workers"
   type = list(string)
-  default = ["master","worker-1"]
+  default = ["worker1", "worker2"]
+}
+
+# Lista de master a crear
+variable "vm_master" {
+  description = "Master"
+  type = list(string)
+  default = ["master"]
 }

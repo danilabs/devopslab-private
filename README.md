@@ -111,3 +111,9 @@ firewall-cmd --reload
 ## 02 Configuracion en master y workers
 
 TO-DO
+
+## Obtener las IPs publicas de las vms creadas con terraform
+az vm show -d -g kubernetesrg -n master --query "publicIps" -o tsv
+az vm show -d -g kubernetesrg -n worker1 --query "publicIps" -o tsv
+az vm show -d -g kubernetesrg -n worker2 --query "publicIps" -o tsv
+

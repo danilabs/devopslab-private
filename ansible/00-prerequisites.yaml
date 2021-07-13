@@ -2,15 +2,15 @@
   become: yes
 
   tasks:
-    - name: Update all Centos8 virtual machines
+    - name: Actualizamos Centos8
       dnf: 
         name: "*"
         state: latest
 
-    - name: Set timezone to Europe/Madrid
+    - name: Seteamos la zona horaria Europe/Madrid
         timezone: Europe/Madrid
 
-    - name: Install and enable chronyd
+    - name: Instalamos y activamos chronyd
       dnf: 
         name: chrony
         state: latest
@@ -20,14 +20,14 @@
         enabled: yes
         daemon_reload: yes
 
-    - name: Enable NTP
+    - name: Activamos NTP
       command: timedatectl set-ntp true
 
-    - name: Disable SElinux
+    - name: Desactivamos SElinux
       selinux:
         state: disabled
 
-    - name: Install NFS modules
+    - name: Instalamos modulos de NFS
       dnf: 
         name: ['nfs-utils','nfs4-acl-tools']
         state: latest
