@@ -48,7 +48,7 @@ az vm image terms show --urn cognosys:centos-8-stream-free:centos-8-stream-free:
 }
 ```
 
-Crear la clave publica de SSH sin passphrase ```ssh-keygen```
+Crear la clave publica de SSH sin passphrase con el comando ```ssh-keygen```
 
 ## 02 Desplegar
 
@@ -74,6 +74,15 @@ terraform destroy
 ```
 
 Informacion de los comandos aqui: https://www.terraform.io/docs/cli/commands/
+
+# Ansible
+
+## 00 Desplegar
+Para empezar con el deployment de ansible sera necesario ejectuar el script ```deploy_azure_env.sh```.
+
+**IMPORTANTE:** Editar el la variable ADMIN_SSH si se desea cambiar de usuario, por defecto es adminUsername.
+
+Este script obtendra las IPs publicas y privadas de las vm desplegadas previamente en azure
 
 
 # Guia instalar K8S
@@ -111,9 +120,3 @@ firewall-cmd --reload
 ## 02 Configuracion en master y workers
 
 TO-DO
-
-## Obtener las IPs publicas de las vms creadas con terraform
-az vm show -d -g kubernetesrg -n master --query "publicIps" -o tsv
-az vm show -d -g kubernetesrg -n worker1 --query "publicIps" -o tsv
-az vm show -d -g kubernetesrg -n worker2 --query "publicIps" -o tsv
-
