@@ -1,0 +1,22 @@
+- hosts: workers
+  become: yes
+
+  tasks:
+    - name: "Creamos el directorio /nfs"
+      file:
+        path: /nfs
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: "Montamos la particion /data/nfs en el worker"
+      mount:
+        fstype: nfs
+        opts: defaults
+        state: mounted
+        src: "{{private_master_ip}}:/data/nfs"
+        path: "/data/nfs"
+
+    - name: "Reiniciamos la VM para aplicar los cambios"
+      reboot:
+        reboot_timeout: 5

@@ -1,0 +1,59 @@
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: "Configuramos zona horaria Europe/Madrid"
+      timezone:
+        name: Europe/Madrid
+
+    - name: Activamos NTP
+      command: timedatectl set-ntp true
+
+    - name: Desactivamos SElinux
+      selinux:
+        state: disabled
+
+    - name: Instalamos chrony
+      package:
+        name:
+          - chrony
+        state: latest
+
+    - name: Actualizar todos los paquetes
+      dnf:
+        name: "*"
+        state: latest
+
+    - name: Instalamos paquetes para NFS
+      dnf:
+        name:
+          - nfs-utils
+          - nfs4-acl-tools
+          - net-tools
+          - wget
+        state: latest
+
+    - name: Iniciamos servicio chronyd, nfs y firewall
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+        daemon_reload: yes
+      with_items:
+        - chronyd
+        - nfs-utils
+        - firewalld
+
+    #- name: "Editamos el fichero /etc/hosts"
+    #  lineinfile:
+    #    dest: /etc/hosts
+    #    state: present
+    #    line: "{{item.line}}"
+    #  with_items:
+    #    - { line: "{{ private_master_ip }} master.localhost.unir" }
+    #    - { line: "{{ private_worker1_ip }} worker1.localhost.unir" }
+    #    - { line: "{{ private_worker2_ip }} worker2.localhost.unir" }
+
+    - name: "Reiniciamos la VM para aplicar los cambios"
+      reboot:
+        reboot_timeout: 5
