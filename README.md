@@ -1,4 +1,9 @@
-# Azure
+# 00 Configuracion
+
+## Instalacion
+Para la instalacion se usara CentOs8, pero es posible instaarlo en otras distribuciones como Ubuntu/Debian.
+
+### Azure
 Importamos el repositorio de Microsoft e instalamos az-cli
 
 ```
@@ -12,18 +17,7 @@ gpgkey=https://packages.microsoft.com/keys/microsoft.asc" | sudo tee /etc/yum.re
 sudo dnf install azure-cli
 ```
 
-## Configurar Azure
-Iniciamos sesion y seteamos el subscrition_id que hemos obtenido del portal de Azure. Luego crearemos el rol de Contributor.
-
-```az login
-az account set --subscription=<SUBSCRIPTION_ID_AQUI>
-az ad sp create-for-rbac --role="Contributor" > data_azure.info
-```
-**IMPORTANTE:** Debemos de guardar la salida de este ultimo comando, lo necesitaremos para configurar el fichero *credentials.tf*.
-
-# Terraform
-
-## 00 Instalacion
+### Terraform
 Para instalar Terraform deberemos de ejecutar los siguientes comandos.
 
 ```sudo dnf install -y dnf-plugins-core
@@ -31,13 +25,22 @@ sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashi
 ```
 Mas informacion: https://www.terraform.io/docs/cli/install/yum.html
 
-## 01 Preparacion
-Descargar las imagenes de centos-8-stream-free para poder utilizarlas posteriormente.
-```az vm image terms acept --urn cognosys:centos-8-stream-free:centos-8-stream-free:1.2019.0810
-az vm image terms show --urn cognosys:centos-8-stream-free:centos-8-stream-free:1.2019.0810
+### Ansible
+Para instalar Ansible deberemos de ejecutar los siguientes comandos.
+
+```sudo dnf install -y ansible
+```
+Mas informacion:https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html
+
+## Preparacion del entorno
+Iniciamos sesion y seteamos el subscrition_id que hemos obtenido del portal de Azure. Luego crearemos el rol de Contributor.
+
+```az login
+az account set --subscription=<SUBSCRIPTION_ID_AQUI>
+az ad sp create-for-rbac --role="Contributor" > data_azure.info
 ```
 
-**IMPORTANTE:** Editar el fichero credentials.tf con los datos necesarios. Revisar los datos del fichero data_azure.info
+**IMPORTANTE 1:** Debemos de guardar la salida de este ultimo comando, lo necesitaremos para configurar el fichero `terraform/credentials.tf`. Se puede utilizar el fichero `terraform/credentials-dummy.tf` como ejemplo.
 
 ```provider "azurerm" {
   features {}
@@ -48,9 +51,17 @@ az vm image terms show --urn cognosys:centos-8-stream-free:centos-8-stream-free:
 }
 ```
 
-Crear la clave publica de SSH sin passphrase con el comando ```ssh-keygen```
+Descargar las imagenes de centos-8-stream-free para poder utilizarlas posteriormente.
+```az vm image terms acept --urn cognosys:centos-8-stream-free:centos-8-stream-free:1.2019.0810
+az vm image terms show --urn cognosys:centos-8-stream-free:centos-8-stream-free:1.2019.0810
+```
 
-## 02 Desplegar
+**IMPORTANTE 2:** El valor de la variable `ssh_user` del fichero `terraform/correcion-vars.tf` tiene que ser el mismo que el valor de la variable `ADMIN_SSH` en el fichero `ansible/pre-deploy.sh`, por defecto es adminUsername.
+
+**IMPORTANTE 3:** Debemos de crear el par clave publica/privada de SSH sin passphrase con el comando ```ssh-keygen```
+
+
+## 01 Desplegar y destruir Terraform
 
 Para poder desplegar terraform correctamente ejecutamos los siguientes comandos.
 ```cd terraform
@@ -63,7 +74,6 @@ terraform apply
 ```
 Informacion de los comandos aqui: https://www.terraform.io/docs/cli/commands/
 
-## 03 Destruir
 
 Para poder destruir la infraestructura creada ejecutamos los siguientes comandos.
 ```cd terraform
@@ -75,15 +85,9 @@ terraform destroy
 
 Informacion de los comandos aqui: https://www.terraform.io/docs/cli/commands/
 
-# Ansible
-
-## 00 Desplegar
-Para empezar con el deployment de ansible sera necesario ejectuar el script ```deploy_azure_env.sh```.
-
-**IMPORTANTE:** Editar el la variable ADMIN_SSH si se desea cambiar de usuario, por defecto es adminUsername.
-
+## 02 Desplegar Ansible
+Antes de desplegar los playbooks de Ansible se debera de ejecutar el fichero `cd ansible; bash pre-deploy.sh`.
 Este script obtendra las IPs publicas y privadas de las vm desplegadas previamente en azure
-
 
 # Guia instalar K8S
 ## 00 Prerequisitos
