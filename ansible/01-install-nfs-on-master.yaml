@@ -33,14 +33,3 @@
 
     - name: "Refrescamos la configuracion de exportfs"
       command: exportfs -arv
-
-    - name: "Habilitamos los puertos del firewall"
-      firewalld:
-        service: "{{ item }}"
-        state: enabled
-        permanent: yes
-        immediate: yes
-      with_items:
-        - "rpc-bind"
-        - "nfs"
-        - "mountd"

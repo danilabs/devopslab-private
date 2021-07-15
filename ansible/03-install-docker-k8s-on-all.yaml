@@ -1,0 +1,107 @@
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: "Vamos a activar transparent masquerading"
+      firewalld:
+        state: enabled
+        zone: public
+        masquerade: yes
+        permanent: yes
+
+    - name: "Activamos modprobe br_netfilter"
+      modprobe:
+        name: br_netfilter
+        state: present
+
+    - name: "Actualizamos la configuracion de IPv6"
+      become: yes
+      sysctl:
+        name: net.bridge.bridge-nf-call-ip6tables
+        value: 1
+        sysctl_set: yes
+        state: present
+        reload: yes
+
+    - name: "Actualizamos la configuracion de IPv4"
+      become: yes
+      sysctl:
+        name: net.bridge.bridge-nf-call-iptables
+        value: 1
+        sysctl_set: yes
+        state: present
+        reload: yes
+
+    - name: "Desactivamos SWAP"
+      command: swapoff -a
+
+    - name: "Desactivamos SWAP de forma persistente"
+      replace:
+        path: /etc/fstab
+        regexp: '^(\s*)([^#\n]+\s+)(\w+\s+)swap(\s+.*)$'
+        replace: '#\1\2\3swap\4'
+        backup: yes
+
+    - name: "Aplicamos los cambios al sistema"
+      command: sysctl --system
+
+    # Instalacion de Docker
+    - name: "Eliminamos el repositorio actual de Docker"
+      yum_repository:
+        name: donwload.docker.com_linux_centos_docker-ce-repo
+        state: absent
+
+    - name: "Agregamos el repositorio oficial de docker"
+      command: dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+    - name: "Instalamos containerd.io docker-ce docker-ce-cli"
+      dnf:
+        name:
+          - containerd.io
+          - docker-ce
+          - docker-ce-cli
+        state: latest
+
+    - name: "Activamos el servicio de docker"
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    # Instalacion de K8s
+    - name: "Creamos el fichero /etc/yum.repos.d/kubernetes.repo"
+      file:
+        path: /etc/yum.repos.d/kubernetes.repo
+        state: touch
+
+    - name: "Configuramos el repositorio de kubernetes:"
+      blockinfile:
+        path: /etc/yum.repos.d/kubernetes.repo
+        block: |
+          [kubernetes]
+          name=Kubernetes
+          baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+          enabled=1
+          gpgcheck=1
+          repo_gpgcheck=1
+          gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+          exclude=kubelet kubeadm kubectl
+
+    - name: "Instalamos kubelet, kubeadm, kubectl"
+      dnf:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+        state: present
+        disable_excludes: kubernetes
+
+    - name: "Activamos el servicio de kubelet"
+      systemd:
+        name: kubelet
+        state: started
+        enabled: yes
+    
+    - name: "Reiniciamos la VM para aplicar los cambios"
+      reboot:
+        reboot_timeout: 5

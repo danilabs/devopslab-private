@@ -9,6 +9,7 @@ ADMIN_SSH="adminUsername"
 GROUP_RESOURCE="kubernetesrg"
 
 ## NO EDITAR
+cd ./ansible/
 # Obtenemos las IPs publicas y privadas. Hacemos una primera conexion para confirmar la firma de SSH
 master_public_ip=`az vm show -d -g $GROUP_RESOURCE -n $MASTER_HOSTNAME --query "publicIps" -o tsv`
 master_private_ip=`az vm show -d -g $GROUP_RESOURCE -n $MASTER_HOSTNAME --query "privateIps" -o tsv`
@@ -44,4 +45,4 @@ $master_public_ip
 
 [workers]
 $worker1_public_ip
-$worker2_public_ip" > ansible/hosts
+$worker2_public_ip" > hosts

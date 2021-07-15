@@ -1,3 +1,7 @@
+# Resumen
+El actual repositorio contiene todo lo necesario para poder desplegar en Azure una arquitectura de 3 VMs (2 workers y 1 master). Este despliegue se realiza mediante IaC, usando Terraform para la creacion de la infraestructura y Ansible para la configuracion de las propias maquinas.
+
+---
 # 00 Configuracion
 
 ## Instalacion
@@ -73,7 +77,7 @@ terraform plan
 terraform apply
 ```
 Informacion de los comandos aqui: https://www.terraform.io/docs/cli/commands/
-
+Tambien se puede ejecutar esta secuencia de comandos mediante el script `bash terraform/build.sh`
 
 Para poder destruir la infraestructura creada ejecutamos los siguientes comandos.
 ```cd terraform
@@ -82,11 +86,12 @@ terraform init
 # Destruye la infraestructura
 terraform destroy
 ```
+Tambien se puede ejecutar esta secuencia de comandos mediante el script `bash terraform/destroy.sh`
 
 Informacion de los comandos aqui: https://www.terraform.io/docs/cli/commands/
 
 ## 02 Desplegar Ansible
-Antes de desplegar los playbooks de Ansible se debera de ejecutar el fichero `cd ansible; bash pre-deploy.sh`.
+Antes de desplegar los playbooks de Ansible se debera de ejecutar el fichero `bash ansible/pre-deploy.sh`.
 Este script obtendra las IPs publicas y privadas de las vm desplegadas previamente en azure
 
 # Guia instalar K8S

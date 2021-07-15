@@ -6,25 +6,23 @@
       timezone:
         name: Europe/Madrid
 
-    - name: Activamos NTP
+    - name: "Activamos NTP"
       command: timedatectl set-ntp true
 
-    - name: Desactivamos SElinux
+    - name: "Desactivamos SElinux"
       selinux:
         state: disabled
 
-    - name: Instalamos chrony
+    - name: "Instalamos chrony"
       package:
         name:
           - chrony
         state: latest
 
-    - name: Actualizar todos los paquetes
-      dnf:
-        name: "*"
-        state: latest
+    - name: "Actualizamos los paquetes"
+      command: dnf -y update && dnf -y upgrade
 
-    - name: Instalamos paquetes para NFS
+    - name: "Instalamos paquetes para NFS"
       dnf:
         name:
           - nfs-utils
@@ -33,7 +31,7 @@
           - wget
         state: latest
 
-    - name: Iniciamos servicio chronyd, nfs y firewall
+    - name: "Iniciamos servicio chronyd, nfs y firewalld"
       systemd:
         name: "{{ item }}"
         state: started
@@ -53,6 +51,17 @@
     #    - { line: "{{ private_master_ip }} master.localhost.unir" }
     #    - { line: "{{ private_worker1_ip }} worker1.localhost.unir" }
     #    - { line: "{{ private_worker2_ip }} worker2.localhost.unir" }
+
+    - name: "Habilitamos los puertos del firewall"
+      firewalld:
+        service: "{{ item }}"
+        state: enabled
+        permanent: yes
+        immediate: yes
+      with_items:
+        - "rpc-bind"
+        - "nfs"
+        - "mountd"
 
     - name: "Reiniciamos la VM para aplicar los cambios"
       reboot:
