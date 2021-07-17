@@ -2,11 +2,20 @@
   become: yes
 
   tasks:
+    #- name: "Iniciamos el servicio de nfs-server"
+    #  service:
+    #    name: "nfs-server"
+    #    enabled: true
+    #    state: started
+
+    - name: "Activamos el servicio de nfs-server"
+      command: systemctl enable nfs-server
+
     - name: "Iniciamos el servicio de nfs-server"
-      service:
-        name: "nfs-server"
-        enabled: true
-        state: started
+      command: service nfs-server restart
+
+    - name: "Iniciamos el servicio de nfs-utils"
+      command: service nfs-utils restart
 
     - name: "Creamos el directorio /data/nfs"
       file:

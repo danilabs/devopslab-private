@@ -10,7 +10,7 @@ resource "azurerm_linux_virtual_machine" "vm_master" {
   count                           = length(var.vm_master)
   network_interface_ids           = [azurerm_network_interface.myNicMaster[count.index].id]
   disable_password_authentication = true
-  computer_name                   = var.vm_workers[count.index]
+  computer_name                   = var.vm_master[count.index]
 
   admin_ssh_key {
     username   = var.ssh_user

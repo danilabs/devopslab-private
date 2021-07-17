@@ -62,11 +62,17 @@
           - docker-ce-cli
         state: latest
 
+    #- name: "Activamos el servicio de docker"
+    #  systemd:
+    #    name: docker
+    #    state: started
+    #    enabled: yes
+
     - name: "Activamos el servicio de docker"
-      systemd:
-        name: docker
-        state: started
-        enabled: yes
+      command: systemctl enable docker.service
+
+    - name: "Reiniciamos el servicio de docker"
+      command: service docker restart
 
     # Instalacion de K8s
     - name: "Creamos el fichero /etc/yum.repos.d/kubernetes.repo"
@@ -74,7 +80,7 @@
         path: /etc/yum.repos.d/kubernetes.repo
         state: touch
 
-    - name: "Configuramos el repositorio de kubernetes:"
+    - name: "Configuramos el repositorio de kubernetes"
       blockinfile:
         path: /etc/yum.repos.d/kubernetes.repo
         block: |
@@ -96,12 +102,17 @@
         state: present
         disable_excludes: kubernetes
 
+    #- name: "Activamos el servicio de kubelet"
+    #  systemd:
+    #    name: kubelet
+    #    state: started
+    #    enabled: yes
     - name: "Activamos el servicio de kubelet"
-      systemd:
-        name: kubelet
-        state: started
-        enabled: yes
-    
+      command: systemctl enable kubelet.service
+
+    - name: "Reiniciamos el servicio de kubelet"
+      command: service kubelet restart
+
     - name: "Reiniciamos la VM para aplicar los cambios"
       reboot:
         reboot_timeout: 5

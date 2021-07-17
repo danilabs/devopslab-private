@@ -1,5 +1,6 @@
-credentials.tf
 .terraform
 .terraform.lock.hcl
+.terraform.tfstate.lock.info
+credentials.tf
 terraform.tfstate
 terraform.tfstate.backup

@@ -2,9 +2,12 @@
   become: yes
 
   tasks:
-    - name: "Creamos el directorio /nfs"
+    - name: "Iniciamos el servicio de nfs-utils"
+      command: service nfs-utils restart
+
+    - name: "Creamos el directorio /data/nfs"
       file:
-        path: /nfs
+        path: /data/nfs
         state: directory
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"

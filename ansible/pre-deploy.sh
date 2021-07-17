@@ -8,6 +8,7 @@ WORKER2_HOSTNAME="worker2.localhostunir.local"
 ADMIN_SSH="adminUsername"
 GROUP_RESOURCE="kubernetesrg"
 
+
 ## NO EDITAR
 cd ./ansible/
 # Obtenemos las IPs publicas y privadas. Hacemos una primera conexion para confirmar la firma de SSH
@@ -36,9 +37,15 @@ EOF
 echo "[all:vars]
 ansible_user=$ADMIN_SSH
 ansible_connection=ssh
+
 private_master_ip=$master_private_ip
+hostname_master=$MASTER_HOSTNAME
+
 private_worker1_ip=$worker1_private_ip
+hostname_worker1=$WORKER1_HOSTNAME
+
 private_worker2_ip=$worker2_private_ip
+hostname_worker2=$WORKER2_HOSTNAME
 
 [master]
 $master_public_ip

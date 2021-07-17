@@ -1,0 +1,9 @@
+- hosts: master
+  become: yes
+
+  tasks:
+    - name: "Desplegando webapp Demo"
+      command: kubectl apply -f https://kubernetes.io/examples/application/deployment.yaml
+
+    - name: "Exponiendo el servicio"
+      command: kubectl expose deployment nginx-deployment --type=NodePort --name=nginx443

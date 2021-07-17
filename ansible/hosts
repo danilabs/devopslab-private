@@ -1,13 +1,19 @@
 [all:vars]
 ansible_user=adminUsername
 ansible_connection=ssh
+
 private_master_ip=10.0.1.10
+hostname_master=master.localhostunir.local
+
 private_worker1_ip=10.0.1.20
+hostname_worker1=worker1.localhostunir.local
+
 private_worker2_ip=10.0.1.21
+hostname_worker2=worker2.localhostunir.local
 
 [master]
-20.101.34.36
+20.86.166.159
 
 [workers]
-20.101.35.5
-20.101.34.59
+20.86.166.242
+20.86.166.128
