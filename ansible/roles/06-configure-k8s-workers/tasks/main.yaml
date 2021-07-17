@@ -1,0 +1,32 @@
+---
+- name: "Activamos los puertos para SDN en UDP"
+  firewalld:
+    port: "{{ item }}/udp"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  with_items:
+    - "8285" # SDN Azure
+    - "8472" # SDN Azure
+
+- name: "Activamos los puertos de K8s en TCP"
+  firewalld:
+    port: "{{ item }}/tcp"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  with_items:
+    - "10250"
+    - "30000-32767"
+
+- name: "Reiniciamos el servicio de firewalld"
+  command: firewall-cmd --reload
+
+- name: "Reiniciamos docker"
+  command: service docker restart
+
+- name: "Reseteamos configuracion de kubeadm"
+  command: kubeadm reset --force
+
+- name: "Unimos los workers al master"
+  shell: "sh /data/nfs/join-command.sh"

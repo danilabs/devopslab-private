@@ -1,0 +1,70 @@
+---
+- name: "Activamos los puertos de K8s en TCP"
+  firewalld:
+    port: "{{ item }}/tcp"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  with_items:
+    - "80" # Web HTTP
+    - "443" # Web HTTPs
+    - "2379-2380" # etcd server client API
+    - "6443" # Kubernetes API Server
+    - "10250-10252" # Kubelet API (1250), kube-scheduler(1251), kube-controller-manager(1252)
+    - "10255" # Statistics
+
+# Configuracion K8s
+- name: "Reseteamos configuracion de kubeadm"
+  command: kubeadm reset --force
+
+- name: "Descargamos las imagenes de kubeadm"
+  command: kubeadm config images pull
+
+- name: "Permitimos el acceso de los workers al nodo master"
+  firewalld:
+    rich_rule: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  with_items:
+    - "rule family=ipv4 source address={{ private_worker1_ip }}/32 accept"
+    - "rule family=ipv4 source address={{ private_worker2_ip }}/32 accept"
+
+- name: "Permitimos el acceso de los contenedores a localhost"
+  firewalld:
+    rich_rule: "rule family=ipv4 source address=172.17.0.0/16 accept"
+    permanent: yes
+    immediate: yes
+    state: enabled
+
+#- name: "Reiniciamos el servicio de firewalld"
+#  systemd:
+#    name: firewalld
+#    state: reloaded
+
+- name: "Reiniciamos el servicio de firewalld"
+  command: firewall-cmd --reload
+
+- name: "Instalamos el plugin CNI de kubernetes y definimos la red de los PODs"
+  command: kubeadm init --pod-network-cidr '192.169.0.0/16' --ignore-preflight-errors=all
+  register: init_output
+
+- name: "Creamos el directorio $HOME/.kube para root"
+  file:
+    path: $HOME/.kube
+    state: directory
+
+- name: "Copiamos el fichero admin.conf a .kube/config"
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: $HOME/.kube/config
+    remote_src: yes
+
+- name: "Cambiamos de propietario el fichero .kube/config a root"
+  file:
+    path: $HOME/.kube/config
+    group: "root"
+    owner: "root"
+
+- name: "Generamos el token join-command para unir los workers al master"
+  shell: kubeadm token create --print-join-command > /data/nfs/join-command.sh

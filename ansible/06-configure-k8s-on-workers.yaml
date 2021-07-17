@@ -1,65 +1,7 @@
-- hosts: master
+---
+- name: 06 - Configurar K8s en workers
+  hosts: workers
   become: yes
 
-  tasks:
-    - name: "Generamos el token join-command para unir los workers al master"
-      shell: kubeadm token create --print-join-command > /data/nfs/join-command.sh
-
-- hosts: workers
-  become: yes
-
-  tasks:
-    - name: "Activamos los puertos para SDN en UDP"
-      firewalld:
-        port: "{{item}}/udp"
-        state: enabled
-        permanent: yes
-        immediate: yes
-      with_items:
-        - "8285" # SDN Azure
-        - "8472" # SDN Azure
-
-    - name: "Activamos los puertos de K8s en TCP"
-      firewalld:
-        port: "{{item}}/tcp"
-        state: enabled
-        permanent: yes
-        immediate: yes
-      with_items:
-        - "10250"
-        - "30000-32767"
-
-    - name: "Reiniciamos el servicio de firewalld"
-      command: firewall-cmd --reload
-
-    - name: "Creamos un deamon para docker"
-      blockinfile:
-        path: /etc/docker/daemon.json
-        create: yes
-        # Se deberia cambiar cgroupfs por systemd, pero da un error en el join-command
-        block: |
-          {
-              "exec-opts": ["native.cgroupdriver=cgroupfs"], 
-              "log-driver": "json-file",
-              "log-opts": {
-                  "max-size": "100m"
-              },
-              "storage-driver": "overlay2"
-          }
-
-    - name: "Creamos el directorio /etc/systemd/system/docker.service.d"
-      file:
-        path: /etc/systemd/system/docker.service.d
-        state: directory
-
-    - name: "Reiniciamos daemon"
-      command: systemctl daemon-reload
-
-    - name: "Reiniciamos docker"
-      command: service docker restart
-
-    - name: "Reseteamos configuracion de kubeadm"
-      command: kubeadm reset --force
-
-    - name: "Unimos los workers al master"
-      shell: "sh /data/nfs/join-command.sh"
+  roles:
+    - 06-configure-k8s-workers

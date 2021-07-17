@@ -1,0 +1,33 @@
+---
+- name: "Activamos los puertos para SDN en UDP"
+  firewalld:
+    port: "{{ item }}/udp"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  with_items:
+    - "8285" # SDN Azure
+    - "8472" # SDN Azure
+
+- name: "Reiniciamos el servicio de firewalld"
+  command: firewall-cmd --reload
+
+# Instalacion Calico
+- name: "Instalamos el operador Tigera"
+  command: kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
+
+- name: "Instalamos Calico junto con los custom resources que necesita"
+  command: wget https://docs.projectcalico.org/manifests/custom-resources.yaml
+
+- name: "Cambiamos el cidr para que coincida con el de nuestra red de PODs"
+  replace:
+    dest: custom-resources.yaml
+    regexp: "192.168.0.0"
+    replace: "192.169.0.0"
+
+- name: "Aplicamos la configuracion del fichero custom-resources.yaml"
+  command: kubectl apply -f custom-resources.yaml
+
+# Instalacion SDN Azure
+- name: "Aplicamos la configuracion del fichero canal.yaml"
+  command: kubectl apply -f https://docs.projectcalico.org/manifests/canal.yaml

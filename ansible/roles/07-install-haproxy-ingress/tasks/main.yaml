@@ -1,0 +1,37 @@
+---
+# Instalacion HAProxy Ingress
+- name: "Instalamos HAProxy Ingress"
+  command: kubectl apply -f https://raw.githubusercontent.com/haproxytech/kubernetes-ingress/v1.5/deploy/haproxy-ingress.yaml
+# Mapeo de puertos (externo:interno)
+# 30432:80 (HTTP)
+# 31967:443 (HTPS)
+# 31588:1024 (Estadisticas)
+
+# Creando usuario no administrador
+- name: "Crear usuario 'Kubeadmin' para la gestion del cluster K8s"
+  user:
+    name: kubeadmin
+    comment: "Usuario para gestion del cluster"
+    shell: /bin/bash # Indicamos que tiene shell
+    create_home: true # Crea directamente el directior /home/kubeadmin
+    password: "password"
+    append: yes
+
+- name: "Creamos el directorio $HOME/.kube"
+  file:
+    path: /home/kubeadmin/.kube
+    state: directory
+
+- name: "Copiamos configuracion /etc/kubernetes/admin.conf $HOME/.kube/config"
+  copy:
+    remote_src: yes
+    src: /etc/kubernetes/admin.conf
+    dest: /home/kubeadmin/.kube/config
+    owner: kubeadmin
+    group: kubeadmin
+
+- name: "Agregamos a 'kubeadmin' al grupo de sudoers"
+  copy:
+    content: "kubeadmin ALL=(ALL:ALL) NOPASSWD:ALL"
+    dest: /etc/sudoers.d/kubeadmin
+    mode: 0440
