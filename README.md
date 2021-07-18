@@ -31,10 +31,9 @@ Mas informacion: https://www.terraform.io/docs/cli/install/yum.html
 
 ### Ansible
 Para instalar Ansible deberemos de ejecutar los siguientes comandos.
+`sudo dnf install -y ansible`
 
-```sudo dnf install -y ansible
-```
-Mas informacion:https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html
+Mas informacion: https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html
 
 ## Preparacion del entorno
 Iniciamos sesion y seteamos el subscrition_id que hemos obtenido del portal de Azure. Luego crearemos el rol de Contributor.
