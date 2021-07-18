@@ -12,8 +12,8 @@ private_worker2_ip=10.0.1.21
 hostname_worker2=worker2.localhostunir.local
 
 [master]
-20.105.147.215
+20.105.198.105
 
 [workers]
-20.93.152.149
-51.144.230.22
+20.105.198.104
+20.105.192.70

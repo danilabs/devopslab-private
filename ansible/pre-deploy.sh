@@ -1,15 +1,15 @@
 #!/bin/bash
-# Editar si es necesario
-# Cambiar nombre de usuario SSH
 
+#EDITAR
+ADMIN_SSH="adminUsername"
+
+# EDITAR SI ES NECESARIO
 MASTER_HOSTNAME="master.localhostunir.local"
 WORKER1_HOSTNAME="worker1.localhostunir.local"
 WORKER2_HOSTNAME="worker2.localhostunir.local"
-ADMIN_SSH="adminUsername"
 GROUP_RESOURCE="kubernetesrg"
 
-
-## NO EDITAR
+# NO EDITAR
 cd ./ansible/
 # Obtenemos las IPs publicas y privadas. Hacemos una primera conexion para confirmar la firma de SSH
 master_public_ip=`az vm show -d -g $GROUP_RESOURCE -n $MASTER_HOSTNAME --query "publicIps" -o tsv`

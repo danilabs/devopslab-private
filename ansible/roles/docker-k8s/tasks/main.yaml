@@ -112,4 +112,4 @@
 
 - name: "Reiniciamos la VM para aplicar los cambios"
   reboot:
-    reboot_timeout: 5
+    reboot_timeout: 2
