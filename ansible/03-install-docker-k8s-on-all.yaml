@@ -4,4 +4,4 @@
   become: yes
 
   roles:
-    - 03-install-docker-k8s
+    - docker-k8s

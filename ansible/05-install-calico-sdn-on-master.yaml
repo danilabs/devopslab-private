@@ -1,7 +1,0 @@
----
-- name: 05 - Instalar Calico y SDN
-  hosts: master
-  become: yes
-
-  roles:
-    - 05-install-calico-sdn

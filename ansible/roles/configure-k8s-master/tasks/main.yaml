@@ -66,5 +66,14 @@
     group: "root"
     owner: "root"
 
+# TODO: Deberiamos hacerlo con variables (hostvars) pero no he conseguido hacerlo funcionar
 - name: "Generamos el token join-command para unir los workers al master"
-  shell: kubeadm token create --print-join-command > /data/nfs/join-command.sh
+  shell: kubeadm token create --print-join-command
+  register: join_command
+
+- name: "Guardamos la salida en join-command"
+  delegate_to: localhost
+  copy:
+    content: "{{ join_command.stdout_lines[0] }}"
+    dest: "./join-command"
+  become: no

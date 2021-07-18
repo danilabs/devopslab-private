@@ -4,4 +4,4 @@
   become: yes
 
   roles:
-    - 00-prerequisites
+    - prerequisites

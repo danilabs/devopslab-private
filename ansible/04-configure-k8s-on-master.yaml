@@ -1,7 +1,0 @@
----
-- name: 04 - Configurar K8s en master
-  hosts: master
-  become: yes
-
-  roles:
-    - 04-configure-k8s-master

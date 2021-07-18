@@ -4,4 +4,4 @@
   become: yes
 
   roles:
-    - 02-install-nfs-client
+    - nfs-client

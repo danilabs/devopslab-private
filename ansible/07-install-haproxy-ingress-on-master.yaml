@@ -1,7 +1,0 @@
----
-- name: 07 - Instalar HAProxy Ingress
-  hosts: master
-  become: yes
-
-  roles:
-    - 07-install-haproxy-ingress

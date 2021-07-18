@@ -1,0 +1,7 @@
+---
+- name: 06 - Desplegar app basica en master
+  hosts: master
+  become: yes
+
+  roles:
+    - deploy-app

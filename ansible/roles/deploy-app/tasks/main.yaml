@@ -1,0 +1,12 @@
+---
+- name: "Creamos el namespace de webapp-routed"
+  command: kubectl create namespace webapp-routed
+
+- name: "Desplegamos la aplicacion webapp-routed"
+  command: kubectl apply -f https://raw.githubusercontent.com/jadebustos/devopslabs/master/labs-k8s/first-routed-webapp/first-routed-webapp.yaml
+
+- name: "Desplegamos el fichero ingress.yaml"
+  command: kubectl apply -f https://raw.githubusercontent.com/jadebustos/devopslabs/master/labs-k8s/first-routed-webapp/ingress.yaml
+
+- name: "Desplegamos el fichero configmap.yaml"
+  command: kubectl apply -f https://raw.githubusercontent.com/jadebustos/devopslabs/master/labs-k8s/first-routed-webapp/configmap.yaml

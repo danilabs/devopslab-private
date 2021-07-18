@@ -1,7 +1,0 @@
----
-- name: 06 - Configurar K8s en workers
-  hosts: workers
-  become: yes
-
-  roles:
-    - 06-configure-k8s-workers

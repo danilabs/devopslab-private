@@ -1,7 +1,0 @@
----
-- name: 08 - Desplegar app basica en master
-  hosts: master
-  become: yes
-
-  roles:
-    - 08-deploy-app

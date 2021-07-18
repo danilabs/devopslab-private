@@ -28,5 +28,13 @@
 - name: "Reseteamos configuracion de kubeadm"
   command: kubeadm reset --force
 
-- name: "Unimos los workers al master"
-  shell: "sh /data/nfs/join-command.sh"
+- name: "Copiamos el fichero join-command al servidor"
+  copy: src=join-command dest=/tmp/join-command.sh mode=0777
+
+- name: "Unimos los nodos al master"
+  shell: /bin/bash /tmp/join-command.sh
+
+- name: "Eliminamos el fichero /tmp/join-command"
+  file:
+    path: /tmp/join-command.sh
+    state: absent
