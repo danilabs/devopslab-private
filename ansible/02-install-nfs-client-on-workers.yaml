@@ -1,7 +1,7 @@
 ---
 - name: 02 - Cliente NFS
   hosts: workers
-  become: yes
+  become: true
 
   roles:
     - nfs-client

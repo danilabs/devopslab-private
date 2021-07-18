@@ -94,38 +94,4 @@ Informacion de los comandos aqui: https://www.terraform.io/docs/cli/commands/
 Antes de desplegar los playbooks de Ansible se debera de ejecutar el fichero `bash ansible/pre-deploy.sh`.
 Este script obtendra las IPs publicas y privadas de las vm desplegadas previamente en azure
 
-# Guia instalar K8S
-## 00 Prerequisitos
-Comando basicos de configuracion en cada maquina. En nuestro caso solo se usara un master y un worker, el master tambien hara de servidor NFS.
-
-```sudo dnf update -y &&
-sudo timedatectl set-timezone Europe/Madrid &&
-sudo dnf install chrony -y &&
-sudo systemctl enable chronyd &&
-sudo systemctl start chronyd &&
-sudo timedatectl set-ntp true &&
-sudo sed -i s/=enforcing/=disabled/g /etc/selinux/config &&
-sudo dnf install nfs-utils nfs4-acl-tools -y
-```
-
-## 01 Instalar NFS
-Creamos y exportamos la carpeta "data" a los hosts indicados.
-
-```systemctl enable nfs-server
-systemctl start nfs-server
-mkdir /data
-echo "/data 192.168.100.110(rw,sync,no_root_squash)" >> /etc/exports
-echo "/data 192.168.100.111(rw,sync,no_root_squash)" >> /etc/exports
-exportfs -arv
-```
-
-Abrimos el firewall para que puedan acceder desde las otras maquinas.
-```systemctl enable firewalld
-systemctl start firewalld
-firewall-cmd --permanent --add-service={nfs,mountd,rpc-bind}
-firewall-cmd --reload
-```
-
-## 02 Configuracion en master y workers
-
-TO-DO
+Posteriormente deberas ejecutar el fichero `bash ansible/deploy.sh`.

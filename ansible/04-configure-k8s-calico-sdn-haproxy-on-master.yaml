@@ -1,7 +1,7 @@
 ---
 - name: 04 - Configurar K8s, Calico-SDN, HA Proxy en master
   hosts: master
-  become: yes
+  become: true
 
   roles:
     - configure-k8s-master

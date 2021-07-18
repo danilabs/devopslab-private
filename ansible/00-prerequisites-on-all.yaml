@@ -1,7 +1,7 @@
 ---
 - name: 00 - Prerequisitos
   hosts: all
-  become: yes
+  become: true
 
   roles:
     - prerequisites

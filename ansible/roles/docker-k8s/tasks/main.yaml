@@ -12,7 +12,7 @@
     state: present
 
 - name: "Actualizamos la configuracion de IPv6"
-  become: yes
+  become: true
   sysctl:
     name: net.bridge.bridge-nf-call-ip6tables
     value: 1
@@ -21,7 +21,7 @@
     reload: yes
 
 - name: "Actualizamos la configuracion de IPv4"
-  become: yes
+  become: true
   sysctl:
     name: net.bridge.bridge-nf-call-iptables
     value: 1

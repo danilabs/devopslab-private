@@ -1,7 +1,7 @@
 ---
 - name: 05 - Configurar K8s en workers
   hosts: workers
-  become: yes
+  become: true
 
   roles:
     - configure-k8s-workers
